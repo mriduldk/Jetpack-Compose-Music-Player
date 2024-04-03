@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.daggerHilt)
+    id("kotlin-kapt")
 }
 
 android {
@@ -66,4 +68,37 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.navigation.compose)
+
+    implementation(libs.constraintlayout.compose)
+
+    // Lifecycle
+    implementation(libs.lifecycle.extensions)
+    implementation(libs.bundles.lifecycle)
+
+    // Dagger - Hilt
+    implementation(libs.bundles.hilt)
+    implementation(libs.media3.ui)
+    kapt(libs.bundles.hilt.kapt)
+
+    // Coroutines
+    implementation(libs.bundles.coroutines)
+
+    // Coil
+    implementation(libs.coil)
+
+    //Accompanist
+    implementation(libs.bundles.accompanist)
+
+    // ExoPlayer
+    //api(libs.bundles.exoplayer)
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.session)
+
+
+    // Retrofit for API requests
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
 }
+
