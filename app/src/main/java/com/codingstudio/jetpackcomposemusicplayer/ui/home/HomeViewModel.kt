@@ -7,6 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.AddMediaItemsUseCase
 import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.GetSongsUseCase
+import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.PauseSongUseCase
+import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.PlaySongUseCase
+import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.ResumeSongUseCase
+import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.SkipToNextSongUseCase
+import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.SkipToPreviousSongUseCase
 import com.codingstudio.jetpackcomposemusicplayer.other.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
@@ -16,7 +21,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getSongsUseCase: GetSongsUseCase,
-    private val addMediaItemsUseCase: AddMediaItemsUseCase
+    private val addMediaItemsUseCase: AddMediaItemsUseCase,
+    private val playSongUseCase: PlaySongUseCase,
+    private val pauseSongUseCase: PauseSongUseCase,
+    private val resumeSongUseCase: ResumeSongUseCase,
+    private val skipToNextSongUseCase: SkipToNextSongUseCase,
+    private val skipToPreviousSongUseCase: SkipToPreviousSongUseCase,
 ) : ViewModel() {
 
     var homeUiState by mutableStateOf(HomeUiState())
@@ -24,11 +34,21 @@ class HomeViewModel @Inject constructor(
 
     fun onEvent(event: HomeEvent) {
 
-        when(event) {
+        when (event) {
+            HomeEvent.PlaySong -> playSong()
+
+            HomeEvent.PauseSong -> pauseSong()
+
+            HomeEvent.ResumeSong -> resumeSong()
+
             HomeEvent.FetchSong -> getSong()
 
-            else -> {
-            }
+            is HomeEvent.OnSongSelected -> homeUiState =
+                homeUiState.copy(selectedSong = event.selectedSong)
+
+            is HomeEvent.SkipToNextSong -> skipToNextSong()
+
+            is HomeEvent.SkipToPreviousSong -> skipToPreviousSong()
         }
 
     }
@@ -77,5 +97,24 @@ class HomeViewModel @Inject constructor(
 
     }
 
+    private fun playSong() {
+        homeUiState.apply {
+            songs?.indexOf(selectedSong)?.let { song ->
+                playSongUseCase(song)
+            }
+        }
+    }
+
+    private fun pauseSong() = pauseSongUseCase()
+
+    private fun resumeSong() = resumeSongUseCase()
+
+    private fun skipToNextSong() = skipToNextSongUseCase {
+        homeUiState = homeUiState.copy(selectedSong = it)
+    }
+
+    private fun skipToPreviousSong() = skipToPreviousSongUseCase {
+        homeUiState = homeUiState.copy(selectedSong = it)
+    }
 
 }

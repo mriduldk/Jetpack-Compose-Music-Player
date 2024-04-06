@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -30,18 +31,12 @@ fun MusicItem (
 
     ConstraintLayout (
         modifier = Modifier
-            .clickable { }
+            .clickable {
+                onClick()
+            }
             .fillMaxWidth()
     ) {
-        val (divider, songTitle, songSubtitle, image ) = createRefs()
-
-        Divider(
-            modifier = Modifier.constrainAs(divider) {
-                top.linkTo(parent.top)
-                centerHorizontallyTo(parent)
-                width = Dimension.fillToConstraints
-            }
-        )
+        val (songTitle, songSubtitle, image ) = createRefs()
 
         Image(
             painter = rememberAsyncImagePainter(
@@ -52,10 +47,10 @@ fun MusicItem (
             contentDescription = "Song Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(56.dp)
-                .clip(MaterialTheme.shapes.medium)
+                .size(40.dp)
+                .clip(CircleShape)
                 .constrainAs(image) {
-                    end.linkTo(parent.end, 16.dp)
+                    start.linkTo(parent.start, 16.dp)
                     top.linkTo(parent.top, 16.dp)
                     bottom.linkTo(parent.bottom, 16.dp)
                 }
@@ -64,36 +59,38 @@ fun MusicItem (
         Text(
             text = song.name,
             maxLines = 2,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.constrainAs(songTitle){
                 linkTo(
-                    start = parent.start,
-                    end = image.start,
+                    start = image.end,
+                    end = parent.end,
                     startMargin = 24.dp,
                     endMargin = 16.dp,
                     bias = 0f
                 )
                 top.linkTo(parent.top, 16.dp)
-                start.linkTo(parent.start, 16.dp)
+                start.linkTo(image.end, 16.dp)
                 width = Dimension.preferredWrapContent
             }
         )
 
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
             Text(
-                text = song.name,
+                text = song.artist,
                 maxLines = 2,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.constrainAs(songSubtitle) {
                     linkTo(
-                        start = parent.start,
-                        end = image.start,
+                        start = image.end,
+                        end = parent.end,
                         startMargin = 24.dp,
                         endMargin = 16.dp,
                         bias = 0f
                     )
-                    top.linkTo(songTitle.bottom, 6.dp)
-                    start.linkTo(parent.start, 16.dp)
+                    top.linkTo(songTitle.bottom, 4.dp)
+                    start.linkTo(image.end, 16.dp)
                     width = Dimension.preferredWrapContent
                 }
             )

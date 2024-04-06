@@ -22,13 +22,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.codingstudio.jetpackcomposemusicplayer.ui.home.component.MusicItem
+import com.codingstudio.jetpackcomposemusicplayer.ui.home.component.HomeAppBar
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.navigation.NavHostController
+import com.codingstudio.jetpackcomposemusicplayer.ui.navigation.Destination
 
 @Composable
 fun HomeScreen(
     onEvent: (HomeEvent) -> Unit,
-    uiState: HomeUiState
+    uiState: HomeUiState,
+    navController: NavHostController
 ) {
 
     Surface (modifier = Modifier.fillMaxSize()) {
@@ -41,6 +45,10 @@ fun HomeScreen(
                 .windowInsetsTopHeight(WindowInsets.statusBars)
             )
 
+            HomeAppBar(
+                backgroundColor = appBarColor,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             with(uiState) {
                 when {
@@ -83,6 +91,7 @@ fun HomeScreen(
                                             onClick = {
                                                 onEvent(HomeEvent.OnSongSelected(_songs))
                                                 onEvent(HomeEvent.PlaySong)
+                                                //navController.navigate(Destination.songScreen)
                                             },
                                             song = _songs
                                         )
