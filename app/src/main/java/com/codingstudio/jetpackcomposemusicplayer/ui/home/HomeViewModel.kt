@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codingstudio.jetpackcomposemusicplayer.domain.model.Song
 import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.AddMediaItemsUseCase
 import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.GetSongsUseCase
 import com.codingstudio.jetpackcomposemusicplayer.domain.usecase.PauseSongUseCase
@@ -42,6 +43,8 @@ class HomeViewModel @Inject constructor(
             HomeEvent.ResumeSong -> resumeSong()
 
             HomeEvent.FetchSong -> getSong()
+
+            HomeEvent.FetchSongTopTracks -> getSongTopTracks()
 
             is HomeEvent.OnSongSelected -> homeUiState =
                 homeUiState.copy(selectedSong = event.selectedSong)
@@ -92,9 +95,54 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
 
+    private fun getSongTopTracks() {
 
+        homeUiState = homeUiState.copy(loading = true)
 
+        viewModelScope.launch {
+            getSongsUseCase().catch {
+                homeUiState = homeUiState.copy(
+                    loading = false,
+                    errorMessage = it.message
+                )
+            }.collect{
+                homeUiState = when(it) {
+                    is Resource.Success -> {
+
+                        val songsTopTrack = ArrayList<Song>()
+                        it.data?.forEach {  _it ->
+
+                            if (_it.top_track) {
+                                songsTopTrack.add(_it)
+                            }
+                        }
+
+                        addMediaItemsUseCase(songsTopTrack)
+                        homeUiState.copy(
+                            loading = false,
+                            songs = songsTopTrack
+                        )
+
+                    }
+
+                    is Resource.Loading -> {
+                        homeUiState.copy(
+                            loading = true,
+                            errorMessage = null
+                        )
+                    }
+
+                    is Resource.Error -> {
+                        homeUiState.copy(
+                            loading = false,
+                            errorMessage = it.message
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun playSong() {

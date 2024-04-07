@@ -3,6 +3,7 @@
 package com.codingstudio.jetpackcomposemusicplayer.ui.songscreeen
 
 import android.graphics.Path.Direction
+import android.view.HapticFeedbackConstants
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
@@ -57,11 +58,14 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -257,6 +261,8 @@ fun SongScreenContent(
         endY = 1500.0f
     )
 
+    val view = LocalView.current
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -388,7 +394,10 @@ fun SongScreenContent(
                                 contentDescription = "Skip Previous",
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .clickable(onClick = playPreviousSong)
+                                    .clickable(onClick = {
+                                        playPreviousSong()
+                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                    })
                                     .padding(12.dp)
                                     .size(32.dp)
                             )
@@ -397,7 +406,10 @@ fun SongScreenContent(
                                 contentDescription = "Replay 10 seconds",
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .clickable(onClick = onRewind)
+                                    .clickable(onClick = {
+                                        onRewind()
+                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                    })
                                     .padding(12.dp)
                                     .size(32.dp)
                             )
@@ -408,7 +420,12 @@ fun SongScreenContent(
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .background(MaterialTheme.colorScheme.onBackground)
-                                    .clickable(onClick = playOrToggleSong)
+                                    .clickable(onClick = {
+
+                                        playOrToggleSong()
+                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+
+                                    })
                                     .size(64.dp)
                                     .padding(8.dp)
                             )
@@ -417,7 +434,10 @@ fun SongScreenContent(
                                 contentDescription = "Forward 10 seconds",
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .clickable(onClick = onForward)
+                                    .clickable(onClick = {
+                                        onForward()
+                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                    })
                                     .padding(12.dp)
                                     .size(32.dp)
                             )
@@ -426,7 +446,10 @@ fun SongScreenContent(
                                 contentDescription = "Skip Next",
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .clickable(onClick = playNextSong)
+                                    .clickable(onClick = {
+                                        playNextSong()
+                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                    })
                                     .padding(12.dp)
                                     .size(32.dp)
                             )

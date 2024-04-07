@@ -1,6 +1,5 @@
 package com.codingstudio.jetpackcomposemusicplayer.ui.home
 
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,12 +24,11 @@ import com.codingstudio.jetpackcomposemusicplayer.ui.home.component.MusicItem
 import com.codingstudio.jetpackcomposemusicplayer.ui.home.component.HomeAppBar
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import com.codingstudio.jetpackcomposemusicplayer.ui.navigation.Destination
 
 @Composable
-fun HomeScreen(
+fun HomeScreenTopTracks(
     onEvent: (HomeEvent) -> Unit,
     uiState: HomeUiState,
     navController: NavHostController
@@ -110,7 +108,6 @@ fun HomeScreen(
             }
 
         }
-
     }
 
 

@@ -1,5 +1,6 @@
 package com.codingstudio.jetpackcomposemusicplayer.ui.home.component
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
@@ -37,6 +38,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
@@ -119,6 +122,9 @@ fun HomeBottomBarItem(
     playerState: PlayerState?,
     onBarClick: () -> Unit
 ) {
+
+    val view  = LocalView.current
+
     Box(
         modifier = Modifier
             .height(76.dp)
@@ -184,6 +190,7 @@ fun HomeBottomBarItem(
                         } else {
                             onEvent(HomeEvent.ResumeSong)
                         }
+                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     },
             )
 
